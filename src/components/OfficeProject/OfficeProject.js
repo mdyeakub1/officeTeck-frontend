@@ -8,6 +8,18 @@ export const OfficeProject = () => {
   const [input, setInput] = useState('')
   const [itemsPerPage, setItemsPerPage] = useState(6);
   const [refetchTrigger, setRefetchTrigger] = useState(false);
+  const [isAssignMemberModalOpen, setAssignMemberModalOpen] = useState(false);
+  const [selectedProjectId, setSelectedProjectId] = useState(null);
+
+  const openAssignMemberModal = (projectId) => {
+    setSelectedProjectId(projectId);
+    setAssignMemberModalOpen(true);
+  };
+
+  const closeAssignMemberModal = () => {
+    setSelectedProjectId(null);
+    setAssignMemberModalOpen(false);
+  };
 
   const { data: projects, isLoading, isError, refetch } = useGetProjectQuery({
     page: currentPage,
@@ -149,7 +161,7 @@ export const OfficeProject = () => {
                     <li><Link to={`/project/edit/${project.id}`}>Edit</Link></li>
                     <li><DeleteOfficeProject empId={project.id} onDeleteSuccess={handleRefetch}>Delete</DeleteOfficeProject></li>
                     <li><Link to={`/project/${project.id}`}>Details</Link></li>
-                    <li><Link onClick={() => document.getElementById('my_modal_3').showModal()}>Assign Member</Link>
+                    <li><Link onClick={() => document.getElementById('my_modal_3',).showModal()}>Assign Member</Link>
                     </li>
                   </ul>
                 </div>
