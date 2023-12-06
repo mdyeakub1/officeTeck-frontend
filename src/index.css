@@ -118,3 +118,14 @@ ul.assignedMemberAvatar li {
     border-radius: 100px;
     background: gray;
 }
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    /* semi-transparent black */
+    z-index: 999;
+    /* ensure it's above other elements */
+}

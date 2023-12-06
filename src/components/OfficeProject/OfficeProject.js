@@ -2,20 +2,27 @@ import React, { useEffect, useState } from 'react';
 import { Link, Outlet } from 'react-router-dom';
 import { useGetProjectQuery } from '../../features/project/projectApi';
 import DeleteOfficeProject from './DeleteOfficeProject';
+import AssignMemberModal from './AssignMemberModal';
 
 export const OfficeProject = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [input, setInput] = useState('')
   const [itemsPerPage, setItemsPerPage] = useState(6);
   const [refetchTrigger, setRefetchTrigger] = useState(false);
-  const [isAssignMemberModalOpen, setAssignMemberModalOpen] = useState(false);
+  const [assignedMembers, setAssignedMembers] = useState([]);
   const [selectedProjectId, setSelectedProjectId] = useState(null);
+  const [isAssignMemberModalOpen, setAssignMemberModalOpen] = useState(false);
 
-  const openAssignMemberModal = (projectId) => {
-    setSelectedProjectId(projectId);
-    setAssignMemberModalOpen(true);
+  const handleAssignMemberModalOpen = (projectId) => {
+    const project = projects.data.find((p) => p.id === projectId);
+    if (project) {
+      setAssignedMembers(project.memberAssinged);
+      setSelectedProjectId(projectId);
+      setAssignMemberModalOpen(true);
+    }
+    console.log(project)
+    console.log(assignedMembers)
   };
-
   const closeAssignMemberModal = () => {
     setSelectedProjectId(null);
     setAssignMemberModalOpen(false);
@@ -147,7 +154,7 @@ export const OfficeProject = () => {
               <td className="py-2 px-4 border-b">
               <ul className='assignedMemberAvatar'>
                     {project.memberAssinged.map((employee) => (
-                        <li>
+                      <li>
                         <div key={employee.id} class="profile-container -mr-2 border-white border-2"> <img className='rounded-full object-fill w-full h-full' src={employee.employee.image} alt='avatar' /></div>
                         </li>
                       
@@ -161,7 +168,7 @@ export const OfficeProject = () => {
                     <li><Link to={`/project/edit/${project.id}`}>Edit</Link></li>
                     <li><DeleteOfficeProject empId={project.id} onDeleteSuccess={handleRefetch}>Delete</DeleteOfficeProject></li>
                     <li><Link to={`/project/${project.id}`}>Details</Link></li>
-                    <li><Link onClick={() => document.getElementById('my_modal_3',).showModal()}>Assign Member</Link>
+                    <li> <Link onClick={() => handleAssignMemberModalOpen(project.id)}>Assign Member</Link>
                     </li>
                   </ul>
                 </div>
@@ -231,17 +238,12 @@ export const OfficeProject = () => {
 
       </div>
     </div>
-
-    <dialog id="my_modal_3" className="modal">
-        <div className="modal-box">
-          <form method="dialog">
-            {/* if there is a button in form, it will close the modal */}
-            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-          </form>
-          <h3 className="font-bold text-lg">Assign Member</h3>
-          <p className="py-4">Press ESC key or click on ✕ button to close</p>
-        </div>
-      </dialog>
+      <AssignMemberModal
+        assignedMembers={assignedMembers}
+        isAssignMemberModalOpen={isAssignMemberModalOpen}
+        selectedProjectId={selectedProjectId}
+        closeAssignMemberModal={closeAssignMemberModal}
+      ></AssignMemberModal>
     </>
   );
 };
