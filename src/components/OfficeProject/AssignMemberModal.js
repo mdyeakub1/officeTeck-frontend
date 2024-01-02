@@ -1,12 +1,54 @@
 
-import { useGetAssignProjectQuery } from "../../features/assignProject/assignProjectApi";
+import { useState } from "react";
+import { useAddAssignProjectMutation, useGetSingleProjectForAssignQuery } from "../../features/assignProject/assignProjectApi";
+import { useGetEmployeeQuery } from "../../features/employee/employeeApi";
 
-const AssignMemberModal = ({ isAssignMemberModalOpen, selectedProjectId:projectId, assignedMembers, closeAssignMemberModal }) => {
+const AssignMemberModal = ({ isAssignMemberModalOpen, selectedProjectId:projectId, closeAssignMemberModal }) => {
 
+  const [input, setInput] = useState('')
+  const [employeeId, setEmployeeId] = useState('')
+  const { data: project, } = useGetSingleProjectForAssignQuery(projectId)
+  const [formData, setFormData] = useState({
+    projectId: '',
+    employeeId: '',
+});
 
-  const { data: employeeAssign, isLoading, isError, refetch } = useGetAssignProjectQuery(projectId)
-  
-  
+  const memberAssinged = project?.data?.memberAssinged
+  const { data: employee, isLoading, isError, refetch } = useGetEmployeeQuery({
+    page: 1,
+    limit: 20,
+    searchTerm: input
+  });
+
+  const [addAssignProject, {data}] = useAddAssignProjectMutation()
+
+  console.log(memberAssinged?.map(e => e.employeeId))
+
+  const handleAssignMember = async (e) => {
+    e.preventDefault();
+    // Trigger a refetch when the form is submitted
+    setFormData({
+      projectId: projectId,
+      employeeId: employeeId,
+    })
+    addAssignProject(formData)
+  };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (isError) {
+    return <div>Error loading data</div>;
+  }
+
+  if (!employee) {
+    return <div>No employee found</div>;
+  }
+
+  const filteredEmployeeData = employee.data.filter(
+    (employee) => !memberAssinged.map(e => e.employeeId === employee.id)
+  );
 
 
   return (
@@ -18,7 +60,7 @@ const AssignMemberModal = ({ isAssignMemberModalOpen, selectedProjectId:projectI
       </form>
       <h3 className="font-bold text-lg">Assign Member</h3>
       <ul className='assignedMemberAvatar'>
-                {assignedMembers.map((employee) => (
+                {memberAssinged?.map((employee) => (
                     <li>
                     <div
                         data-te-chip-init
@@ -49,7 +91,41 @@ const AssignMemberModal = ({ isAssignMemberModalOpen, selectedProjectId:projectI
                     </li>
                   
                 ))}
-                </ul>{employeeAssign?.data.map(employee => console.log(employee))}
+          </ul>
+          <form className="mt-6" onSubmit={handleAssignMember}>
+            <label className="block mb-2 text-sm font-medium text-gray-700">Search Member</label>
+            <div className="flex">
+            <input
+              type="text"
+              id="search"
+              placeholder="Search..."
+              className="border border-gray-300 px-3  py-2 mr-3 focus:outline-none focus:ring focus:border-blue-300 h-[48px]"
+              value={input}
+              onChange={(e) => {
+                if (!employee.length) {
+                  setInput(e.target.value);
+                }
+              }}
+            />
+            <button className="btn btn-outline">Assign</button>
+            </div>
+          </form>
+          {input && (
+            <ul className="search-suggestions">
+          {employee?.data?.map((employee) => (
+            <li
+              key={employee?.id}
+              onClick={() => {
+                setInput(employee.name);
+                setEmployeeId(employee.id)
+                }}
+                className="cursor-pointer py-2 px-4 hover:bg-gray-100"
+            >
+              {employee?.name}
+            </li>
+          ))}
+        </ul>
+          )}
     </div>
   </dialog>
     </>

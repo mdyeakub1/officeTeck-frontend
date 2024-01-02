@@ -12,17 +12,20 @@ export const OfficeProject = () => {
   const [assignedMembers, setAssignedMembers] = useState([]);
   const [selectedProjectId, setSelectedProjectId] = useState(null);
   const [isAssignMemberModalOpen, setAssignMemberModalOpen] = useState(false);
+  const [assignedMemberId, setAssignedMemberId]= useState([])
 
   const handleAssignMemberModalOpen = (projectId) => {
     const project = projects.data.find((p) => p.id === projectId);
     if (project) {
-      setAssignedMembers(project.memberAssinged);
+      setAssignedMembers(project?.memberAssinged);
       setSelectedProjectId(projectId);
       setAssignMemberModalOpen(true);
     }
-    console.log(project)
-    console.log(assignedMembers)
+    project?.memberAssinged.forEach(element => {
+      setAssignedMemberId(element.employeeId)
+    });
   };
+
   const closeAssignMemberModal = () => {
     setSelectedProjectId(null);
     setAssignMemberModalOpen(false);
@@ -243,6 +246,7 @@ export const OfficeProject = () => {
         isAssignMemberModalOpen={isAssignMemberModalOpen}
         selectedProjectId={selectedProjectId}
         closeAssignMemberModal={closeAssignMemberModal}
+        assignedMemberId={assignedMemberId}
       ></AssignMemberModal>
     </>
   );

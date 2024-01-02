@@ -14,6 +14,12 @@ export const assignProjectApi = apiSlice.injectEndpoints({
             }
         }),
 
+        getSingleProjectForAssign: builder.query({
+            query: (ProjectId) => {
+                return `projects/${ProjectId}`
+            }
+        }),
+
         addAssignProject: builder.mutation({
             query: (data) => ({
                 url: "/employee-project/create-employee-project",
@@ -46,4 +52,5 @@ export const {
     useEditAssignProjectMutation,
     useGetAssignProjectQuery,
     useGetSingleAssignProjectQuery,
+    useGetSingleProjectForAssignQuery
 } = assignProjectApi;
