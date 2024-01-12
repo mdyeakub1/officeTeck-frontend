@@ -3,6 +3,7 @@
 officeTech is a simple office management system
 ![myimage-alt-tag]([url-to-image](https://i.postimg.cc/NjBBWKvs/ecommerce-website-shopify-1.png))
 <img src="[your_relative_path_here](https://i.postimg.cc/NjBBWKvs/ecommerce-website-shopify-1.png)" width="800" title="hover text">
+![image description](src/assets/images/officeTeck-cover.png)
 
 
 ### Features
