@@ -1,8 +1,8 @@
 
-### OfficeTeck
+# OfficeTeck
 officeTech is a simple office management system
 
-# Features
+### Features
 1. Login
 2. Register
 3. Dashboard
@@ -12,7 +12,7 @@ officeTech is a simple office management system
 7. Assign the project to an employee
 8. Assign assets to an employee
 
-# Front-end Technology
+### Front-end Technology
 1. HTML
 2. CSS
 3. Javascript
