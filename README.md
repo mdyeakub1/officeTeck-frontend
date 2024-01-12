@@ -1,5 +1,5 @@
 
-# OfficeTeck
+# OfficeTeck Front-end
 officeTech is a simple office management system
 ![image description](src/assets/images/officeTeck-cover.png)
 
